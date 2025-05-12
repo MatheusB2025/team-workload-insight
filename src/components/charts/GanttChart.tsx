@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTeam } from "@/context/TeamContext";
@@ -18,32 +19,11 @@ export const GanttChart: React.FC = () => {
   );
 
   function getMemberColor(id: string): string {
-    // Assign a color based on member id to keep it consistent
-    const colors = ["bg-purple-400", "bg-green-400", "bg-yellow-400"];
+    // Assign colors similar to the image provided
+    const colors = ["bg-purple-400", "bg-orange-400", "bg-yellow-400", "bg-green-400"];
     const index = parseInt(id.split("-")[1]) % colors.length;
     return colors[index];
   }
-  
-  // Group tasks by day
-  const tasksByDay: Record<string, any[]> = {};
-  FullDays.forEach(day => {
-    tasksByDay[day] = [];
-  });
-  
-  tasks.forEach(task => {
-    task.days.forEach(day => {
-      const fullDay = day === "Seg" ? "Segunda" : 
-                     day === "Ter" ? "Terça" :
-                     day === "Qua" ? "Quarta" :
-                     day === "Qui" ? "Quinta" : "Sexta";
-      
-      tasksByDay[fullDay].push({
-        id: task.id,
-        name: `${task.name} - ${task.member}`,
-        color: task.color
-      });
-    });
-  });
 
   return (
     <Card>
@@ -54,42 +34,48 @@ export const GanttChart: React.FC = () => {
       <CardContent>
         <div className="overflow-x-auto">
           <div className="min-w-[600px]">
-            <div className="grid grid-cols-5">
-              {FullDays.map(day => (
-                <div key={day} className="p-2 text-center font-medium border-b">
-                  {day}
-                </div>
-              ))}
-              
-              <div className="col-span-5">
-                {tasks.map(task => {
-                  const startDayIndex = FullDays.findIndex(day => 
-                    task.days.includes(day === "Segunda" ? "Seg" : 
-                                     day === "Terça" ? "Ter" : 
-                                     day === "Quarta" ? "Qua" : 
-                                     day === "Quinta" ? "Qui" : "Sex")
-                  );
-                  
-                  const taskLength = task.days.length;
-                  
-                  // Calculate position and span
-                  const style = {
-                    gridColumnStart: startDayIndex + 1,
-                    gridColumnEnd: startDayIndex + taskLength + 1,
-                    gridRow: "auto"
-                  };
-                  
-                  return (
-                    <div 
-                      key={task.id}
-                      className={`${task.color} text-white p-2 m-1 rounded text-sm`}
-                      style={style}
-                    >
+            {/* Time scale header */}
+            <div className="flex border-b">
+              <div className="w-48 p-2 font-medium">Tarefa</div>
+              <div className="flex-1 grid grid-cols-5">
+                {FullDays.map(day => (
+                  <div key={day} className="p-2 text-center font-medium">
+                    {day}
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Task rows */}
+            <div className="space-y-1 mt-2">
+              {tasks.map(task => {
+                const firstDayIndex = FullDays.findIndex(day => 
+                  task.days.includes(day === "Segunda" ? "Seg" : 
+                                   day === "Terça" ? "Ter" : 
+                                   day === "Quarta" ? "Qua" : 
+                                   day === "Quinta" ? "Qui" : "Sex")
+                );
+                
+                return (
+                  <div key={task.id} className="flex items-center">
+                    <div className="w-48 p-2 truncate font-medium text-sm">
                       {task.name} - {task.member}
                     </div>
-                  );
-                })}
-              </div>
+                    <div className="flex-1 grid grid-cols-5 gap-1 relative h-8">
+                      {/* Task bar */}
+                      <div 
+                        className={`absolute h-6 ${task.color} rounded-md`}
+                        style={{
+                          left: `${(firstDayIndex / 5) * 100}%`,
+                          width: `${(task.days.length / 5) * 100}%`,
+                          maxWidth: "calc(100% - 4px)", // Prevent overflow
+                          top: "4px"
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

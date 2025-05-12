@@ -34,7 +34,7 @@ const AnalysisPage = () => {
           </div>
         </div>
         
-        {/* Gantt Chart - Full width, matches the second image */}
+        {/* Gantt Chart - Full width, matching the provided image */}
         <div className="mb-8">
           <GanttChart />
         </div>
