@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -44,42 +44,59 @@ export const MainLayout: React.FC<LayoutProps> = ({ children }) => {
 
 export const TeamLayout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const currentWeek = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
   
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="border-b">
-        <nav className="flex">
-          <Link
-            to="/equipe"
-            className={`px-6 py-3 font-medium ${
-              location.pathname === "/equipe" 
-                ? "border-b-2 border-purple text-purple" 
-                : "text-gray-600 hover:text-gray-800"
-            }`}
+        <nav className="flex p-2 bg-gray-50 rounded-t-lg shadow-sm">
+          <div className="flex-1 flex rounded-md border border-purple shadow-sm overflow-hidden">
+            <Link
+              to="/equipe"
+              className={`px-6 py-3 font-medium transition-colors ${
+                location.pathname === "/equipe" 
+                  ? "bg-purple text-white" 
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              }`}
+            >
+              Equipe
+            </Link>
+            <Link
+              to="/analise"
+              className={`px-6 py-3 font-medium transition-colors ${
+                location.pathname.includes("/analise")
+                  ? "bg-purple text-white" 
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              }`}
+            >
+              Análise
+            </Link>
+            <Link
+              to="/usuarios"
+              className={`px-6 py-3 font-medium transition-colors ${
+                location.pathname === "/usuarios"
+                  ? "bg-purple text-white" 
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              }`}
+            >
+              Usuários
+            </Link>
+          </div>
+          
+          <Button 
+            variant="outline" 
+            className="ml-4"
+            onClick={handleLogout}
           >
-            Equipe
-          </Link>
-          <Link
-            to="/analise"
-            className={`px-6 py-3 font-medium ${
-              location.pathname.includes("/analise")
-                ? "border-b-2 border-purple text-purple" 
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            Análise
-          </Link>
-          <Link
-            to="/usuarios"
-            className={`px-6 py-3 font-medium ${
-              location.pathname === "/usuarios"
-                ? "border-b-2 border-purple text-purple" 
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            Usuários
-          </Link>
+            Testar Login
+          </Button>
         </nav>
       </div>
       
