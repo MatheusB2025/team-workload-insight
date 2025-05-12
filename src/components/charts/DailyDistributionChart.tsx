@@ -20,8 +20,8 @@ export const DailyDistributionChart: React.FC = () => {
     return dayData;
   });
   
-  // Create an array of colors for each member
-  const memberColors = ["#9b87f5", "#92D9A2", "#FDDA75", "#FF9A8B", "#8EB8FA"];
+  // Colors matching the reference images
+  const memberColors = ["#9b87f5", "#92D9A2", "#FDDA75"];
 
   return (
     <Card>
@@ -38,7 +38,7 @@ export const DailyDistributionChart: React.FC = () => {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis />
+              <YAxis domain={[0, 'dataMax + 1']} tickCount={10} />
               <Tooltip />
               <Legend />
               {currentTeam.members.map((member, index) => (

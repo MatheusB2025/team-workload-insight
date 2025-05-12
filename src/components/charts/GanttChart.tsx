@@ -19,7 +19,7 @@ export const GanttChart: React.FC = () => {
 
   function getMemberColor(id: string): string {
     // Assign a color based on member id to keep it consistent
-    const colors = ["bg-purple", "bg-workload-adequate", "bg-workload-inadequate"];
+    const colors = ["bg-purple-400", "bg-green-400", "bg-yellow-400"];
     const index = parseInt(id.split("-")[1]) % colors.length;
     return colors[index];
   }
@@ -61,18 +61,35 @@ export const GanttChart: React.FC = () => {
                 </div>
               ))}
               
-              {FullDays.map(day => (
-                <div key={`content-${day}`} className="p-2 min-h-[400px] border-r">
-                  {tasksByDay[day].map(task => (
+              <div className="col-span-5">
+                {tasks.map(task => {
+                  const startDayIndex = FullDays.findIndex(day => 
+                    task.days.includes(day === "Segunda" ? "Seg" : 
+                                     day === "Terça" ? "Ter" : 
+                                     day === "Quarta" ? "Qua" : 
+                                     day === "Quinta" ? "Qui" : "Sex")
+                  );
+                  
+                  const taskLength = task.days.length;
+                  
+                  // Calculate position and span
+                  const style = {
+                    gridColumnStart: startDayIndex + 1,
+                    gridColumnEnd: startDayIndex + taskLength + 1,
+                    gridRow: "auto"
+                  };
+                  
+                  return (
                     <div 
-                      key={`${day}-${task.id}`} 
-                      className={`${task.color} text-white p-2 my-1 rounded text-sm`}
+                      key={task.id}
+                      className={`${task.color} text-white p-2 m-1 rounded text-sm`}
+                      style={style}
                     >
-                      {task.name}
+                      {task.name} - {task.member}
                     </div>
-                  ))}
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Label } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTeam } from "@/context/TeamContext";
 
@@ -17,16 +17,18 @@ export const WorkloadChart: React.FC<WorkloadChartProps> = ({ showDetails = fals
     id: member.id
   }));
 
+  // Use colors that match the images better
   const COLORS = ["#9b87f5", "#92D9A2", "#FDDA75"];
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, value }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 1.1;
     const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
     const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
 
+    // Format similar to the image with name and percentage
     return (
-      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-        {`${name} ${(percent * 100).toFixed(0)}%`}
+      <text x={x} y={y} fill="#666" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${name}: ${value}%`}
       </text>
     );
   };
@@ -51,6 +53,7 @@ export const WorkloadChart: React.FC<WorkloadChartProps> = ({ showDetails = fals
     <Card className="h-full">
       <CardHeader>
         <CardTitle>Carga de Trabalho</CardTitle>
+        <p className="text-sm text-muted-foreground">Distribuição de tarefas por colaborador</p>
       </CardHeader>
       <CardContent className="relative">
         <div className="h-80">
@@ -60,7 +63,7 @@ export const WorkloadChart: React.FC<WorkloadChartProps> = ({ showDetails = fals
                 data={data}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
+                labelLine={true}
                 outerRadius={showDetails ? 80 : 100}
                 fill="#8884d8"
                 dataKey="value"
