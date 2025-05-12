@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { format, addMonths, subMonths, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Calendar, ChevronLeft, ChevronRight, ListPlus, Plus } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, ListPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sprint } from "@/types";
 import { 
@@ -27,7 +27,9 @@ export const SprintSidebar: React.FC = () => {
   const [sprints, setSprints] = useState<Sprint[]>(initialSprints);
   const isMobile = useIsMobile();
   
-  const monthName = format(currentMonth, "MMMM yyyy", { locale: ptBR });
+  // Capitalize the first letter of the month
+  const rawMonthName = format(currentMonth, "MMMM yyyy", { locale: ptBR });
+  const monthName = rawMonthName.charAt(0).toUpperCase() + rawMonthName.slice(1);
   
   const handlePreviousMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
