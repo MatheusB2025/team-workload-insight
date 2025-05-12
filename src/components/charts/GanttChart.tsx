@@ -3,8 +3,7 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTeam } from "@/context/TeamContext";
 import { FullDays } from "@/types";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Users } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const GanttChart: React.FC = () => {
   const { currentTeam } = useTeam();
@@ -16,6 +15,7 @@ export const GanttChart: React.FC = () => {
       name: task.name,
       member: member.name,
       memberInitials: member.initials,
+      memberImage: member.image,
       days: task.days,
       color: getMemberColor(member.id)
     }))
@@ -103,9 +103,13 @@ export const GanttChart: React.FC = () => {
                         <div className="w-1"></div> {/* Empty space at start */}
                         {/* Avatar at the end of the bar */}
                         <Avatar className="h-6 w-6 bg-white/30">
-                          <AvatarFallback className="text-xs text-white">
-                            {task.memberInitials}
-                          </AvatarFallback>
+                          {task.memberImage ? (
+                            <AvatarImage src={task.memberImage} alt={task.member} />
+                          ) : (
+                            <AvatarFallback className="text-xs text-white">
+                              {task.memberInitials}
+                            </AvatarFallback>
+                          )}
                         </Avatar>
                       </div>
                     </div>
