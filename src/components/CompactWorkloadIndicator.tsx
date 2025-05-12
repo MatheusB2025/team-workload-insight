@@ -9,14 +9,14 @@ interface CompactWorkloadIndicatorProps {
 export const CompactWorkloadIndicator: React.FC<CompactWorkloadIndicatorProps> = ({ workload }) => {
   const { getWorkloadStatus, getWorkloadColor } = useTeam();
   const status = getWorkloadStatus(workload);
-  const colorClass = getWorkloadColor(status);
   
   // Calculate the circle's circumference and the filled portion
   const size = 32;
   const strokeWidth = 3;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const fillPercent = (100 - workload) / 100 * circumference;
+  // For the progress, we need to calculate how much of the circle should be filled
+  const fillPercent = workload / 100 * circumference;
 
   return (
     <div className="text-center flex items-center justify-center">
@@ -33,16 +33,16 @@ export const CompactWorkloadIndicator: React.FC<CompactWorkloadIndicatorProps> =
             stroke="#f0f0f0"
           />
           
-          {/* Progress circle */}
+          {/* Progress circle - this is the colored portion */}
           <circle
             cx={size/2}
             cy={size/2}
             r={radius}
             fill="none"
             strokeWidth={strokeWidth}
-            stroke="#9b87f5" // Purple color
+            stroke="#9b87f5" // Purple color as shown in the image
             strokeDasharray={circumference}
-            strokeDashoffset={fillPercent}
+            strokeDashoffset={circumference - fillPercent}
             strokeLinecap="round"
           />
         </svg>
