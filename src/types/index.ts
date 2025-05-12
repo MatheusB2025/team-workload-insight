@@ -47,17 +47,5 @@ export type UserRole = 'Administrador' | 'Leitor';
 
 export type WorkloadStatus = 'Inadequada' | 'Adequada' | 'Elevada';
 
-export interface Sprint {
-  id: number;
-  name: string;
-  startDate: string;
-  endDate: string;
-  archived?: boolean;
-  folderId?: string;
-}
-
-export interface SprintFolder {
-  id: string;
-  name: string;
-  isOpen: boolean;
-}
+// These types are now defined in src/context/team/types.ts
+// They are referenced from the imports in other files
