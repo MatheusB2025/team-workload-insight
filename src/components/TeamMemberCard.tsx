@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ArrowRight, Edit, Trash2, Plus } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface TeamMemberCardProps {
   member: TeamMember;
@@ -79,7 +79,11 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center">
           <Avatar className="mr-2 h-7 w-7 bg-gray-200">
-            <AvatarFallback className="text-xs">{member.initials}</AvatarFallback>
+            {member.image ? (
+              <AvatarImage src={member.image} alt={member.name} />
+            ) : (
+              <AvatarFallback className="text-xs">{member.initials}</AvatarFallback>
+            )}
           </Avatar>
           <div>
             <h3 className="text-sm font-medium">{member.name}</h3>
