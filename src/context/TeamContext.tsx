@@ -1,7 +1,8 @@
-
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { Team, TeamMember, Task, Day, User, UserRole, WorkloadStatus } from "@/types";
+import { Team, TeamMember, Task, Day, User, UserRole, WorkloadStatus, Sprint, SprintFolder } from "@/types";
 import { toast } from "sonner";
+import { addWeeks, format, parseISO, endOfWeek, startOfWeek } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface TeamContextProps {
   currentTeam: Team;
@@ -22,6 +23,13 @@ interface TeamContextProps {
   addUser: (name: string, email: string, role: UserRole) => void;
   removeUser: (id: string) => void;
   editUser: (id: string, name: string, email: string, role: UserRole) => void;
+  sprints: Sprint[];
+  sprintFolders: SprintFolder[];
+  addSprint: (startDate: Date) => void;
+  toggleSprintFolder: (folderId: string) => void;
+  archiveSprint: (sprintId: number) => void;
+  unarchiveSprint: (sprintId: number) => void;
+  moveSprint: (sprintId: number, folderId: string) => void;
 }
 
 const TeamContext = createContext<TeamContextProps | undefined>(undefined);
@@ -75,6 +83,93 @@ export const TeamProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       },
     ],
   });
+
+  // Sprint folders
+  const [sprintFolders, setSprintFolders] = useState<SprintFolder[]>([
+    { id: "folder-1", name: "Maio 2025", isOpen: true },
+    { id: "folder-2", name: "Junho 2025", isOpen: false },
+  ]);
+
+  // Sprints
+  const [sprints, setSprints] = useState<Sprint[]>([
+    { id: 1, name: "Semana 1", startDate: "2025-05-05", endDate: "2025-05-11", folderId: "folder-1" },
+    { id: 2, name: "Semana 2", startDate: "2025-05-12", endDate: "2025-05-18", folderId: "folder-1" },
+    { id: 3, name: "Semana 3", startDate: "2025-05-19", endDate: "2025-05-25", folderId: "folder-1" },
+    { id: 4, name: "Semana 4", startDate: "2025-05-26", endDate: "2025-06-01", folderId: "folder-1" },
+    { id: 5, name: "Semana 1", startDate: "2025-06-02", endDate: "2025-06-08", folderId: "folder-2" },
+    { id: 6, name: "Semana 2", startDate: "2025-06-09", endDate: "2025-06-15", folderId: "folder-2" },
+  ]);
+
+  const toggleSprintFolder = (folderId: string) => {
+    setSprintFolders(
+      sprintFolders.map((folder) => 
+        folder.id === folderId ? { ...folder, isOpen: !folder.isOpen } : folder
+      )
+    );
+  };
+
+  const archiveSprint = (sprintId: number) => {
+    setSprints(
+      sprints.map((sprint) => 
+        sprint.id === sprintId ? { ...sprint, archived: true } : sprint
+      )
+    );
+    toast.success("Sprint arquivada com sucesso!");
+  };
+
+  const unarchiveSprint = (sprintId: number) => {
+    setSprints(
+      sprints.map((sprint) => 
+        sprint.id === sprintId ? { ...sprint, archived: false } : sprint
+      )
+    );
+    toast.success("Sprint restaurada com sucesso!");
+  };
+
+  const moveSprint = (sprintId: number, folderId: string) => {
+    setSprints(
+      sprints.map((sprint) => 
+        sprint.id === sprintId ? { ...sprint, folderId } : sprint
+      )
+    );
+  };
+
+  const addSprint = (startDate: Date) => {
+    // Format the month for folder name
+    const monthYear = format(startDate, "MMMM yyyy", { locale: ptBR });
+    const capitalizedMonthYear = monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+    
+    // Find or create folder for this month
+    let folder = sprintFolders.find(f => f.name === capitalizedMonthYear);
+    
+    if (!folder) {
+      folder = {
+        id: `folder-${Date.now()}`,
+        name: capitalizedMonthYear,
+        isOpen: true
+      };
+      setSprintFolders([...sprintFolders, folder]);
+    }
+    
+    // Calculate sprint week number for this month
+    const sprintsInFolder = sprints.filter(s => s.folderId === folder!.id);
+    const weekNumber = sprintsInFolder.length + 1;
+
+    // Calculate end date (end of the week)
+    const endDate = endOfWeek(startDate, { weekStartsOn: 1 });
+    
+    // Create new sprint with empty tasks but same team members
+    const newSprint: Sprint = {
+      id: Date.now(),
+      name: `Semana ${weekNumber}`,
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
+      folderId: folder.id
+    };
+    
+    setSprints([...sprints, newSprint]);
+    toast.success("Nova sprint criada com sucesso!");
+  };
 
   const addMember = (name: string, image?: string) => {
     const initials = name
@@ -331,7 +426,14 @@ export const TeamProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         users,
         addUser,
         removeUser,
-        editUser
+        editUser,
+        sprints,
+        sprintFolders,
+        addSprint,
+        toggleSprintFolder,
+        archiveSprint,
+        unarchiveSprint,
+        moveSprint
       }}
     >
       {children}

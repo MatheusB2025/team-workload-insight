@@ -1,4 +1,3 @@
-
 export interface Team {
   id: string;
   name: string;
@@ -52,4 +51,12 @@ export interface Sprint {
   name: string;
   startDate: string;
   endDate: string;
+  archived?: boolean;
+  folderId?: string;
+}
+
+export interface SprintFolder {
+  id: string;
+  name: string;
+  isOpen: boolean;
 }
