@@ -19,9 +19,9 @@ const AnalysisPage = () => {
     <TeamLayout>
       <div className="p-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          <h1 className="text-xl font-bold">Análise de Tarefas</h1>
+          {/* Removed duplicate title since TeamLayout already contains it */}
           
-          <div className="w-full md:w-64 mt-4 md:mt-0">
+          <div className="w-full md:w-64 mt-4 md:mt-0 ml-auto">
             <Select value={currentWeek} onValueChange={setCurrentWeek}>
               <SelectTrigger>
                 <SelectValue placeholder="Semana Atual" />
