@@ -13,6 +13,7 @@ import TeamPage from "@/pages/TeamPage";
 import AnalysisPage from "@/pages/AnalysisPage";
 import UsersPage from "@/pages/UsersPage";
 import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "@/pages/RegisterPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,7 @@ const App = () => (
               <Sonner />
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/cadastro" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="/" element={<Navigate to="/login" replace />} />

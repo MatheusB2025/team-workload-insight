@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
-import { 
+import {
   Card,
   CardContent,
   CardDescription,
@@ -15,16 +15,34 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
-const LoginPage = () => {
+const RegisterPage = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState("login");
+  const [activeTab, setActiveTab] = useState("cadastro");
+  const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("As senhas não coincidem!");
+      return;
+    }
+    
+    // In a real app, we would call a register function here
+    // For now, let's simulate a successful registration
+    localStorage.setItem("user", JSON.stringify({
+      id: "1",
+      name,
+      email,
+      role: "admin",
+    }));
+    
     login(email, password);
+    navigate("/equipe");
   };
 
   const validateEmail = (value: string) => {
@@ -57,26 +75,37 @@ const LoginPage = () => {
         </CardHeader>
         
         <div className="flex w-full border-b mb-4">
-          <button 
+          <Link
+            to="/login" 
             className={`flex-1 py-2 font-medium text-center ${
               activeTab === "login" ? "bg-white" : "bg-gray-100"
             }`}
-            onClick={() => setActiveTab("login")}
           >
             Login
-          </button>
-          <Link 
-            to="/cadastro" 
+          </Link>
+          <button 
             className={`flex-1 py-2 font-medium text-center ${
               activeTab === "cadastro" ? "bg-white" : "bg-gray-100"
             }`}
+            onClick={() => setActiveTab("cadastro")}
           >
             Cadastro
-          </Link>
+          </button>
         </div>
         
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nome</Label>
+              <Input 
+                id="name" 
+                type="text" 
+                placeholder="Seu nome completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
@@ -89,15 +118,7 @@ const LoginPage = () => {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Senha</Label>
-                <Link 
-                  to="/forgot-password" 
-                  className="text-sm text-primary hover:underline"
-                >
-                  Esqueci a senha
-                </Link>
-              </div>
+              <Label htmlFor="password">Senha</Label>
               <div className="relative">
                 <Input 
                   id="password" 
@@ -120,10 +141,21 @@ const LoginPage = () => {
                 </button>
               </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <Input 
+                id="confirmPassword" 
+                type={showPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••"
+                required
+              />
+            </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full bg-gray-900 hover:bg-black">
-              Entrar
+              Cadastrar
             </Button>
           </CardFooter>
         </form>
@@ -136,4 +168,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -37,8 +37,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = (email: string, password: string) => {
+    // Validate email domain
+    if (!email.endsWith("@fraga.com.br")) {
+      toast({
+        title: "Erro",
+        description: "O email deve pertencer ao domínio @fraga.com.br",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // In a real app, this would validate against a backend
-    if (email.includes("@") && password.length >= 6) {
+    if (password.length >= 6) {
       const newUser = {
         id: "1",
         name: email.split("@")[0],
@@ -59,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       toast({
         title: "Erro",
-        description: "Email ou senha inválidos",
+        description: "Senha inválida. A senha deve ter pelo menos 6 caracteres.",
         variant: "destructive",
       });
     }
@@ -78,28 +88,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const requestPasswordReset = (email: string) => {
-    // In a real app, this would send an email with a temporary password
-    if (email.includes("@")) {
-      const tempPassword = Math.random().toString(36).slice(-8);
-      localStorage.setItem("tempPassword", tempPassword);
-      localStorage.setItem("resetEmail", email);
-      
-      toast({
-        title: "Recuperação de senha",
-        description: `Uma senha temporária foi enviada para ${email}. Para fins de demonstração, a senha é: ${tempPassword}`,
-      });
-      
-      navigate("/reset-password");
-    } else {
+    // Validate email domain
+    if (!email.endsWith("@fraga.com.br")) {
       toast({
         title: "Erro",
-        description: "Email inválido",
+        description: "O email deve pertencer ao domínio @fraga.com.br",
         variant: "destructive",
       });
+      return;
     }
+    
+    // In a real app, this would send an email with a temporary password
+    const tempPassword = Math.random().toString(36).slice(-8);
+    localStorage.setItem("tempPassword", tempPassword);
+    localStorage.setItem("resetEmail", email);
+    
+    toast({
+      title: "Recuperação de senha",
+      description: `Uma senha temporária foi enviada para ${email}. Para fins de demonstração, a senha é: ${tempPassword}`,
+    });
+    
+    navigate("/reset-password");
   };
 
   const resetPassword = (email: string, tempPassword: string, newPassword: string) => {
+    // Validate email domain
+    if (!email.endsWith("@fraga.com.br")) {
+      toast({
+        title: "Erro",
+        description: "O email deve pertencer ao domínio @fraga.com.br",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const storedEmail = localStorage.getItem("resetEmail");
     const storedTempPassword = localStorage.getItem("tempPassword");
     

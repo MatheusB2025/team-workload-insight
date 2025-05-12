@@ -18,6 +18,19 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const { requestPasswordReset } = useAuth();
 
+  const validateEmail = (value: string) => {
+    if (value && !value.endsWith("@fraga.com.br")) {
+      const username = value.split('@')[0] || value;
+      return `${username}@fraga.com.br`;
+    }
+    return value;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const validEmail = validateEmail(e.target.value);
+    setEmail(validEmail);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     requestPasswordReset(email);
@@ -27,7 +40,7 @@ const ForgotPasswordPage = () => {
     <div className="flex items-center justify-center h-screen bg-app-bg">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-2xl font-bold text-center text-red-600">
             Recuperar senha
           </CardTitle>
           <CardDescription className="text-center">
@@ -41,15 +54,15 @@ const ForgotPasswordPage = () => {
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="exemplo@email.com"
+                placeholder="seu.nome@fraga.com.br"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 required
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-gray-900 hover:bg-black">
               Enviar senha temporária
             </Button>
             <Link to="/login" className="text-sm text-center text-primary hover:underline w-full">
