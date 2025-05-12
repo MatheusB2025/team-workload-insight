@@ -6,7 +6,7 @@ import { WorkloadChart } from "@/components/charts/WorkloadChart";
 import { GanttChart } from "@/components/charts/GanttChart";
 import { DailyDistributionChart } from "@/components/charts/DailyDistributionChart";
 import { WorkloadStatusCard } from "@/components/charts/WorkloadStatusCard";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useTeam } from "@/context/TeamContext";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,25 +18,7 @@ const AnalysisPage = () => {
   return (
     <TeamLayout>
       <div className="p-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          {/* Removed duplicate title since TeamLayout already contains it */}
-          
-          <div className="w-full md:w-64 mt-4 md:mt-0 ml-auto">
-            <Select value={currentWeek} onValueChange={setCurrentWeek}>
-              <SelectTrigger>
-                <SelectValue placeholder="Semana Atual" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Semana Atual">Semana Atual</SelectItem>
-                <SelectItem value="Semana 1 - 28/04 - 04/05">Semana 1 - 28/04 - 04/05</SelectItem>
-                <SelectItem value="Semana 2 - 05/05 - 11/05">Semana 2 - 05/05 - 11/05</SelectItem>
-                <SelectItem value="Semana 3 - 12/05 - 18/05">Semana 3 - 12/05 - 18/05</SelectItem>
-                <SelectItem value="Semana 4 - 19/05 - 25/05">Semana 4 - 19/05 - 25/05</SelectItem>
-                <SelectItem value="Semana 5 - 26/05 - 01/06">Semana 5 - 26/05 - 01/06</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        {/* Removed duplicate title and week selector since TeamLayout already contains it */}
         
         {/* Gantt Chart - Full width */}
         <div className="mb-8">

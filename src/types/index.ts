@@ -40,7 +40,7 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  avatar?: string; // Added the missing avatar property to fix the build error
+  avatar?: string;
 }
 
 export type UserRole = 'Administrador' | 'Leitor';
