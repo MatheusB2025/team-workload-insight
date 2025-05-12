@@ -6,6 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowRight, Edit, Trash2, Plus } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -57,6 +67,11 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
     toggleTaskDay(member.id, taskId, day);
   };
 
+  const handleRemoveMember = () => {
+    removeMember(member.id);
+    setIsConfirmingDelete(false);
+  };
+
   const otherMembers = currentTeam.members.filter(m => m.id !== member.id);
 
   return (
@@ -71,10 +86,18 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
             <p className="text-xs text-gray-500">{member.tasks.length} tarefas</p>
           </div>
         </div>
-        <div>
+        <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full flex items-center justify-center bg-gray-100">
             <span className="text-xs font-medium">{member.workload}%</span>
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+            onClick={() => setIsConfirmingDelete(true)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
@@ -199,6 +222,25 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isConfirmingDelete} onOpenChange={setIsConfirmingDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Colaborador</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir o colaborador <span className="font-semibold">{member.name}</span>? 
+              Esta ação não poderá ser desfeita e todas as tarefas associadas serão removidas.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRemoveMember} className="bg-red-500 hover:bg-red-600">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
