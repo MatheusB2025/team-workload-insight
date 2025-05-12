@@ -14,8 +14,8 @@ export const CompactWorkloadIndicator: React.FC<CompactWorkloadIndicatorProps> =
 
   return (
     <div className="text-center">
-      <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-100 mb-1">
-        <span className="text-xs font-medium">{workload}%</span>
+      <div className="inline-flex items-center justify-center h-6 w-10 rounded-sm bg-gray-100 text-xs font-medium">
+        {workload}%
       </div>
     </div>
   );
