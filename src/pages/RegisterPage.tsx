@@ -86,7 +86,7 @@ const RegisterPage = () => {
               activeTab === "login" ? "bg-white" : "bg-gray-100"
             }`}
           >
-            Login
+            Cadastro
           </Link>
           <button 
             className={`flex-1 py-2 font-medium text-center ${
@@ -94,7 +94,7 @@ const RegisterPage = () => {
             }`}
             onClick={() => setActiveTab("cadastro")}
           >
-            Cadastro
+            Login
           </button>
         </div>
         

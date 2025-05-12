@@ -63,7 +63,7 @@ const LoginPage = () => {
             }`}
             onClick={() => setActiveTab("login")}
           >
-            Login
+            Cadastro
           </button>
           <Link 
             to="/cadastro" 
@@ -71,7 +71,7 @@ const LoginPage = () => {
               activeTab === "cadastro" ? "bg-white" : "bg-gray-100"
             }`}
           >
-            Cadastro
+            Login
           </Link>
         </div>
         
