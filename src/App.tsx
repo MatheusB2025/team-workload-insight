@@ -26,21 +26,31 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <TeamProvider>
-            <MainLayout>
-              <Toaster />
-              <Sonner />
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/cadastro" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
-                <Route path="/" element={<Navigate to="/login" replace />} />
-                <Route path="/equipe" element={<TeamPage />} />
-                <Route path="/analise" element={<AnalysisPage />} />
-                <Route path="/usuarios" element={<UsersPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </MainLayout>
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/cadastro" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/equipe" element={
+                <MainLayout>
+                  <TeamPage />
+                </MainLayout>
+              } />
+              <Route path="/analise" element={
+                <MainLayout>
+                  <AnalysisPage />
+                </MainLayout>
+              } />
+              <Route path="/usuarios" element={
+                <MainLayout>
+                  <UsersPage />
+                </MainLayout>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </TeamProvider>
         </AuthProvider>
       </BrowserRouter>

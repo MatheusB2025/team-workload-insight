@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LogOut } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,14 +25,19 @@ export const MainLayout: React.FC<LayoutProps> = ({ children }) => {
             
             {isAuthenticated && (
               <div className="flex items-center gap-4">
-                <span className="text-gray-600">
-                  {user?.name}
-                </span>
+                <div className="flex items-center gap-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-gray-600 font-normal">
+                    {user?.name}
+                  </span>
+                </div>
                 <Button 
                   variant="ghost" 
                   onClick={logout}
                 >
-                  Sair
+                  <LogOut className="mr-1 h-4 w-4" /> Sair
                 </Button>
               </div>
             )}
@@ -57,10 +64,10 @@ export const TeamLayout: React.FC<LayoutProps> = ({ children }) => {
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="border-b">
         <nav className="flex p-2 bg-gray-50 rounded-t-lg shadow-sm">
-          <div className="flex-1 flex rounded-md border border-purple shadow-sm overflow-hidden">
+          <div className="flex-1 flex rounded-md border-2 border-purple-300 shadow-sm overflow-hidden">
             <Link
               to="/equipe"
-              className={`px-6 py-3 font-medium transition-colors ${
+              className={`px-6 py-3 font-normal transition-colors ${
                 location.pathname === "/equipe" 
                   ? "bg-purple text-white" 
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
@@ -70,7 +77,7 @@ export const TeamLayout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
             <Link
               to="/analise"
-              className={`px-6 py-3 font-medium transition-colors ${
+              className={`px-6 py-3 font-normal transition-colors ${
                 location.pathname.includes("/analise")
                   ? "bg-purple text-white" 
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
@@ -80,7 +87,7 @@ export const TeamLayout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
             <Link
               to="/usuarios"
-              className={`px-6 py-3 font-medium transition-colors ${
+              className={`px-6 py-3 font-normal transition-colors ${
                 location.pathname === "/usuarios"
                   ? "bg-purple text-white" 
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
@@ -95,17 +102,17 @@ export const TeamLayout: React.FC<LayoutProps> = ({ children }) => {
             className="ml-4"
             onClick={handleLogout}
           >
-            Testar Login
+            <LogOut className="mr-1 h-4 w-4" /> Testar Login
           </Button>
         </nav>
       </div>
       
       {location.pathname.includes("/analise") && (
         <div className="border-b px-6 py-3 flex justify-between items-center">
-          <h2 className="text-lg font-medium">Análise de Tarefas</h2>
+          <h2 className="text-lg font-normal">Análise de Tarefas</h2>
           
           <div className="flex items-center gap-2">
-            <span className="text-sm">Semana:</span>
+            <span className="text-sm font-normal">Semana:</span>
             <Select defaultValue="current">
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Semana Atual" />
@@ -124,3 +131,4 @@ export const TeamLayout: React.FC<LayoutProps> = ({ children }) => {
     </div>
   );
 };
+
