@@ -5,11 +5,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { WorkloadChart } from "@/components/charts/WorkloadChart";
 import { GanttChart } from "@/components/charts/GanttChart";
 import { DailyDistributionChart } from "@/components/charts/DailyDistributionChart";
+import { WorkloadStatusCard } from "@/components/charts/WorkloadStatusCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTeam } from "@/context/TeamContext";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AnalysisPage = () => {
   const { currentWeek, setCurrentWeek, currentTeam, getWorkloadStatus, getWorkloadColor } = useTeam();
+  const [activeTab, setActiveTab] = useState("charts");
 
   return (
     <TeamLayout>
@@ -34,68 +38,67 @@ const AnalysisPage = () => {
           </div>
         </div>
         
-        {/* Gantt Chart - Full width, matching the provided image */}
+        {/* Gantt Chart - Full width */}
         <div className="mb-8">
           <GanttChart />
         </div>
         
-        {/* Two-column layout for Distribution Chart and Workload Chart */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <DailyDistributionChart />
+        {/* Tabs for different analysis views */}
+        <Tabs defaultValue="charts" className="mb-6" onValueChange={setActiveTab}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="charts">Gráficos</TabsTrigger>
+            <TabsTrigger value="workload">Carga de Trabalho</TabsTrigger>
+          </TabsList>
           
-          <div>
-            <WorkloadChart showDetails={true} />
-            
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Status da Carga de Trabalho</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {currentTeam.members.map(member => {
-                    const status = getWorkloadStatus(member.workload);
-                    const colorClass = getWorkloadColor(status);
-                    
-                    return (
-                      <div key={member.id} className="flex flex-col">
-                        <div className="flex justify-between mb-2">
-                          <span className="font-medium">{member.name}</span>
-                          <span className={`font-medium text-${colorClass}`}>{status}</span>
+          <TabsContent value="charts" className="space-y-4">
+            {/* Two-column layout for Distribution Chart and Workload Chart */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <DailyDistributionChart />
+              <WorkloadChart showDetails={true} />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="workload">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left: Detailed workload status card */}
+              <WorkloadStatusCard />
+              
+              {/* Right: Individual workload cards */}
+              <div className="grid grid-cols-1 gap-4 content-start">
+                {currentTeam.members.map(member => {
+                  const status = getWorkloadStatus(member.workload);
+                  const colorClass = getWorkloadColor(status);
+                  
+                  return (
+                    <Card key={member.id}>
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <div>
+                            <h3 className="font-medium text-sm">{member.name}</h3>
+                            <p className={`text-xs text-${colorClass}`}>{status}</p>
+                          </div>
+                          <div className="text-2xl font-semibold">{member.workload}%</div>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                          <div 
-                            className={`bg-${colorClass} h-2.5 rounded-full`} 
-                            style={{ width: `${member.workload}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex justify-between mt-1">
-                          <span className="text-xs text-gray-500">0%</span>
-                          <span className="text-xs text-gray-500">{member.workload}%</span>
-                          <span className="text-xs text-gray-500">100%</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                
-                <div className="mt-8 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-workload-inadequate"></div>
-                    <span className="text-sm">Inadequada (0-50%): Necessário rever atividades distribuídas (carga baixa)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-workload-adequate"></div>
-                    <span className="text-sm">Adequada (51-80%): Distribuição ideal de tarefas</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-workload-high"></div>
-                    <span className="text-sm">Elevada (81-100%): Necessário rever atividades distribuídas (sobrecarga)</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+                        
+                        <Progress 
+                          value={member.workload} 
+                          className="h-2" 
+                          indicatorClassName={`bg-${colorClass}`}
+                        />
+                        
+                        <p className="mt-3 text-xs text-gray-500">
+                          {status === "Inadequada" && "Necessário rever atividades distribuídas (carga baixa)"}
+                          {status === "Adequada" && "Distribuição ideal de tarefas"}
+                          {status === "Elevada" && "Necessário rever atividades distribuídas (sobrecarga)"}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </TeamLayout>
   );

@@ -60,61 +60,61 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
   const otherMembers = currentTeam.members.filter(m => m.id !== member.id);
 
   return (
-    <div className="border-t pt-4 pb-2">
-      <div className="flex items-center justify-between mb-4">
+    <div className="border-t pt-3 pb-2">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center">
-          <Avatar className="mr-3 h-8 w-8 bg-gray-200">
-            <AvatarFallback>{member.initials}</AvatarFallback>
+          <Avatar className="mr-2 h-7 w-7 bg-gray-200">
+            <AvatarFallback className="text-xs">{member.initials}</AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-medium">{member.name}</h3>
-            <p className="text-sm text-gray-500">{member.tasks.length} tarefas</p>
+            <h3 className="text-sm font-medium">{member.name}</h3>
+            <p className="text-xs text-gray-500">{member.tasks.length} tarefas</p>
           </div>
         </div>
         <div>
-          <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gray-100">
-            <span className="text-sm font-medium">{member.workload}%</span>
+          <div className="h-8 w-8 rounded-full flex items-center justify-center bg-gray-100">
+            <span className="text-xs font-medium">{member.workload}%</span>
           </div>
         </div>
       </div>
 
-      <div className="space-y-3 pl-11">
+      <div className="space-y-2 pl-9">
         {member.tasks.map((task) => (
-          <div key={task.id} className="pb-3">
+          <div key={task.id} className="pb-2">
             <div className="flex justify-between items-center mb-1">
-              <span>{task.name}</span>
-              <div className="flex space-x-2">
+              <span className="text-xs">{task.name}</span>
+              <div className="flex space-x-1">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   onClick={() => setEditingTask({ id: task.id, name: task.name })}
                 >
-                  <Edit className="h-4 w-4" />
+                  <Edit className="h-3 w-3" />
                 </Button>
                 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-6 w-6">
-                      <ArrowRight className="h-4 w-4" />
+                    <Button variant="ghost" size="icon" className="h-5 w-5">
+                      <ArrowRight className="h-3 w-3" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-60">
-                    <div className="space-y-2">
-                      <h4 className="font-medium">Transferir tarefa</h4>
-                      <p className="text-sm text-muted-foreground">Selecione para qual membro transferir:</p>
-                      <div className="grid gap-2">
+                  <PopoverContent className="w-60 p-2">
+                    <div className="space-y-1">
+                      <h4 className="text-xs font-medium">Transferir tarefa</h4>
+                      <p className="text-xs text-muted-foreground">Selecione para qual membro transferir:</p>
+                      <div className="grid gap-1">
                         {otherMembers.map(m => (
                           <Button 
                             key={m.id} 
                             variant="outline" 
-                            className="justify-start"
+                            className="justify-start h-7 text-xs py-0 px-2"
                             onClick={() => {
                               transferTask(task.id, member.id, m.id);
                             }}
                           >
-                            <Avatar className="mr-2 h-6 w-6">
-                              <AvatarFallback className="text-xs">{m.initials}</AvatarFallback>
+                            <Avatar className="mr-1 h-4 w-4">
+                              <AvatarFallback className="text-[10px]">{m.initials}</AvatarFallback>
                             </Avatar>
                             {m.name}
                           </Button>
@@ -127,10 +127,10 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6 text-destructive hover:text-destructive"
+                  className="h-5 w-5 text-destructive hover:text-destructive"
                   onClick={() => removeTask(member.id, task.id)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3 w-3" />
                 </Button>
               </div>
             </div>
@@ -139,7 +139,7 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
                 <button
                   key={day}
                   onClick={() => handleToggleDay(task.id, day)}
-                  className={`h-7 w-10 text-xs font-medium ${
+                  className={`h-5 w-8 text-[10px] font-medium ${
                     task.days.includes(day) ? dayColors[day] : "bg-gray-100 text-gray-600"
                   } rounded`}
                 >
@@ -151,8 +151,8 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
         ))}
 
         {/* Add Task Button */}
-        <div className="flex items-center text-sm text-gray-500 hover:text-gray-700 cursor-pointer" onClick={() => setIsAddingTask(true)}>
-          <Plus className="h-4 w-4 mr-1" /> Adicionar tarefa
+        <div className="flex items-center text-xs text-gray-500 hover:text-gray-700 cursor-pointer" onClick={() => setIsAddingTask(true)}>
+          <Plus className="h-3 w-3 mr-1" /> Adicionar tarefa
         </div>
       </div>
 

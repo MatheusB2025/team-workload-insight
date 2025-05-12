@@ -29,10 +29,8 @@ const TeamPage = () => {
         <div className="flex-1">
           <TeamLayout>
             <div className="p-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <h1 className="text-xl font-bold">Equipe - CIT</h1>
-                
-                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 w-full">
                   <div className="relative flex-1 sm:w-64">
                     <Input
                       type="text"
@@ -50,8 +48,8 @@ const TeamPage = () => {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <h2 className="text-lg font-medium">Colaborador</h2>
-                  <h2 className="text-lg font-medium">Carga de Trabalho</h2>
+                  <h2 className="text-sm font-medium">Colaborador</h2>
+                  <h2 className="text-sm font-medium">Carga de Trabalho</h2>
                 </div>
                 
                 <div className="mt-3">
