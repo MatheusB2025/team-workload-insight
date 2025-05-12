@@ -13,7 +13,8 @@ import {
   Archive, 
   Calendar,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  RefreshCw
 } from "lucide-react";
 import { 
   Select, 
@@ -27,11 +28,12 @@ import { ptBR } from "date-fns/locale";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const TeamPage = () => {
-  const { currentTeam, sprints, archiveSprint } = useTeam();
+  const { currentTeam, sprints, archiveSprint, unarchiveSprint } = useTeam();
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewMemberDialogOpen, setIsNewMemberDialogOpen] = useState(false);
   const [isTeamListCollapsed, setIsTeamListCollapsed] = useState(false);
   const [selectedSprintId, setSelectedSprintId] = useState<number | null>(null);
+  const [showArchivedSprints, setShowArchivedSprints] = useState(false);
   
   const filteredMembers = searchQuery.trim() 
     ? currentTeam.members.filter(member => 
@@ -49,6 +51,9 @@ const TeamPage = () => {
 
   // Get available sprints for dropdown
   const availableSprints = sprints.filter(sprint => !sprint.archived);
+  
+  // Get archived sprints
+  const archivedSprints = sprints.filter(sprint => sprint.archived);
 
   return (
     <SidebarProvider>
@@ -100,6 +105,14 @@ const TeamPage = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
+                    onClick={() => setShowArchivedSprints(!showArchivedSprints)}
+                  >
+                    <Archive className="h-4 w-4 mr-1" />
+                    Sprints Arquivadas
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
                     onClick={() => archiveSprint(selectedSprintId || (firstWeekSprint?.id || 0))}
                   >
                     <Archive className="h-4 w-4 mr-1" />
@@ -107,6 +120,33 @@ const TeamPage = () => {
                   </Button>
                 </div>
               </div>
+
+              {/* Archived Sprints Section */}
+              {showArchivedSprints && archivedSprints.length > 0 && (
+                <div className="mb-6 p-4 bg-gray-50 rounded-md">
+                  <h3 className="font-medium mb-3 text-sm">Sprints Arquivadas</h3>
+                  <div className="space-y-2">
+                    {archivedSprints.map(sprint => (
+                      <div key={sprint.id} className="flex justify-between items-center p-2 bg-white rounded border">
+                        <div>
+                          <span className="font-medium text-sm">{sprint.name}</span>
+                          <span className="text-xs text-gray-500 ml-2">
+                            ({formatSprintDate(sprint.startDate)} - {formatSprintDate(sprint.endDate)})
+                          </span>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => unarchiveSprint(sprint.id)}
+                        >
+                          <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                          Restaurar
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <Collapsible
                 open={!isTeamListCollapsed}
