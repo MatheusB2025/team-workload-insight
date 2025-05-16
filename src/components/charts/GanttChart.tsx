@@ -23,7 +23,7 @@ export const GanttChart: React.FC = () => {
 
   function getMemberColor(id: string): string {
     // Assign colors similar to the image provided
-    const colors = ["bg-purple-400", "bg-orange-400", "bg-yellow-400", "bg-green-400"];
+    const colors = ["bg-purple-400", "bg-orange-400", "bg-yellow-400", "bg-green-400", "bg-blue-400", "bg-indigo-400"];
     const index = parseInt(id.split("-")[1]) % colors.length;
     return colors[index];
   }

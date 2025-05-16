@@ -9,11 +9,20 @@ export const addUser = (
   email: string, 
   role: UserRole
 ) => {
+  // Generate initials from name
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .substring(0, 2);
+    
   const newUser: User = {
     id: `user-${Date.now()}`,
     name,
     email,
     role,
+    initials
   };
   
   setUsers([...users, newUser]);
@@ -40,9 +49,17 @@ export const editUser = (
   email: string, 
   role: UserRole
 ) => {
+  // Generate new initials if name has changed
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .substring(0, 2);
+    
   setUsers(users.map(user => {
     if (user.id === id) {
-      return { ...user, name, email, role };
+      return { ...user, name, email, role, initials };
     }
     return user;
   }));

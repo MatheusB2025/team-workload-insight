@@ -1,3 +1,4 @@
+
 export interface Team {
   id: string;
   name: string;
@@ -48,6 +49,3 @@ export interface User {
 export type UserRole = 'Administrador' | 'Leitor';
 
 export type WorkloadStatus = 'Inadequada' | 'Adequada' | 'Elevada';
-
-// These types are now defined in src/context/team/types.ts
-// They are referenced from the imports in other files
