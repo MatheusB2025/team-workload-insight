@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { Day, User, UserRole, WorkloadStatus } from "@/types";
 import { Team, TeamContextProps, Sprint, SprintFolder } from "./types";
 import { calculateWorkload, getWorkloadStatus, getWorkloadColor } from "./workloadUtils";
@@ -8,7 +8,10 @@ import {
   toggleSprintFolder, 
   archiveSprint, 
   unarchiveSprint, 
-  moveSprint 
+  moveSprint,
+  deleteSprint,
+  editSprint,
+  createMonthFolders
 } from "./sprintUtils";
 import { 
   addMember, 
@@ -42,6 +45,11 @@ export const TeamProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [sprintFolders, setSprintFolders] = useState<SprintFolder[]>(initialSprintFolders);
   const [sprints, setSprints] = useState<Sprint[]>(initialSprints);
 
+  // Create month folders on first load
+  useEffect(() => {
+    createMonthFolders(sprintFolders, setSprintFolders);
+  }, []);
+
   const calculateMemberWorkload = (memberId: string): number => {
     const member = currentTeam.members.find((m) => m.id === memberId);
     if (!member) return 0;
@@ -74,11 +82,13 @@ export const TeamProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         editUser: (id, name, email, role) => editUser(users, setUsers, id, name, email, role),
         sprints,
         sprintFolders,
-        addSprint: (startDate) => addSprint(sprints, sprintFolders, setSprintFolders, setSprints, startDate),
+        addSprint: (startDate, month, year) => addSprint(sprints, sprintFolders, setSprintFolders, setSprints, startDate, month, year),
         toggleSprintFolder: (folderId) => toggleSprintFolder(folderId, sprintFolders, setSprintFolders),
         archiveSprint: (sprintId) => archiveSprint(sprintId, sprints, setSprints),
         unarchiveSprint: (sprintId) => unarchiveSprint(sprintId, sprints, setSprints),
-        moveSprint: (sprintId, folderId) => moveSprint(sprintId, folderId, sprints, setSprints)
+        moveSprint: (sprintId, folderId) => moveSprint(sprintId, folderId, sprints, setSprints),
+        deleteSprint: (sprintId) => deleteSprint(sprintId, sprints, setSprints),
+        editSprint: (sprintId, name, startDate, endDate) => editSprint(sprintId, sprints, setSprints, name, startDate, endDate)
       }}
     >
       {children}

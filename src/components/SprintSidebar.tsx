@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { format, addWeeks, parseISO, startOfWeek } from "date-fns";
+import React, { useState, useEffect } from "react";
+import { format, addWeeks, parseISO, startOfWeek, setMonth, getYear, getMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { 
   Calendar, 
@@ -11,14 +11,30 @@ import {
   FolderOpen, 
   Archive, 
   Check, 
-  Plus 
+  Plus,
+  Edit,
+  Trash2,
+  MoreVertical
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { 
   Sidebar, 
   SidebarContent,
@@ -28,29 +44,72 @@ import {
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTeam } from "@/context/TeamContext";
+import { Sprint } from "@/context/team/types";
 
 export const SprintSidebar: React.FC = () => {
-  const { sprints, sprintFolders, toggleSprintFolder, archiveSprint, unarchiveSprint, addSprint } = useTeam();
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2025, 4, 12)); // May 12th 2025
+  const { 
+    sprints, 
+    sprintFolders, 
+    toggleSprintFolder, 
+    archiveSprint, 
+    unarchiveSprint, 
+    addSprint,
+    deleteSprint,
+    editSprint
+  } = useTeam();
+  
+  // New sprint state
   const [isNewSprintDialogOpen, setIsNewSprintDialogOpen] = useState(false);
-  const [selectedWeek, setSelectedWeek] = useState<number>(0); // 0 = current week, 1 = next week, etc.
+  const [selectedWeek, setSelectedWeek] = useState<number>(0);
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
+  const [selectedYear] = useState<number>(2025);
+  
+  // Edit sprint state
+  const [isEditSprintDialogOpen, setIsEditSprintDialogOpen] = useState(false);
+  const [editingSprint, setEditingSprint] = useState<Sprint | null>(null);
+  const [editSprintName, setEditSprintName] = useState("");
+  
   const isMobile = useIsMobile();
   
   // Generate weeks for the select component
   const weeks = Array.from({ length: 6 }, (_, i) => {
-    const weekDate = addWeeks(startOfWeek(new Date(), { weekStartsOn: 1 }), i);
+    const weekDate = addWeeks(startOfWeek(new Date(selectedYear, selectedMonth, 1), { weekStartsOn: 1 }), i);
     const startDateStr = format(weekDate, "dd/MM", { locale: ptBR });
     const endDateStr = format(addWeeks(weekDate, 1), "dd/MM", { locale: ptBR });
     return { 
       value: i.toString(), 
-      label: `Semana ${i+1} (${startDateStr} - ${endDateStr})` 
+      label: `Semana ${i+1} (${startDateStr} - ${endDateStr})`,
+      date: weekDate
+    };
+  });
+  
+  // Generate months for the select component
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const date = new Date(selectedYear, i, 1);
+    return {
+      value: i.toString(),
+      label: format(date, "MMMM", { locale: ptBR }),
     };
   });
 
   const handleCreateNewSprint = () => {
-    const startDate = addWeeks(startOfWeek(new Date(), { weekStartsOn: 1 }), selectedWeek);
-    addSprint(startDate);
+    const startDate = weeks[selectedWeek].date;
+    addSprint(startDate, selectedMonth, selectedYear);
     setIsNewSprintDialogOpen(false);
+  };
+  
+  const handleEditSprint = () => {
+    if (editingSprint) {
+      editSprint(editingSprint.id, editSprintName);
+      setIsEditSprintDialogOpen(false);
+      setEditingSprint(null);
+    }
+  };
+  
+  const openEditDialog = (sprint: Sprint) => {
+    setEditingSprint(sprint);
+    setEditSprintName(sprint.name);
+    setIsEditSprintDialogOpen(true);
   };
   
   const formatSprintDates = (startDate: string, endDate: string) => {
@@ -83,27 +142,30 @@ export const SprintSidebar: React.FC = () => {
             </div>
             
             <div className="opacity-0 group-hover:opacity-100">
-              <Popover>
-                <PopoverTrigger asChild>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Archive className="h-3 w-3" />
+                    <MoreVertical className="h-3 w-3" />
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48 p-2" side="right">
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-medium">Gerenciar Sprint</h4>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="w-full justify-start text-xs h-7"
-                      onClick={() => archived ? unarchiveSprint(sprint.id) : archiveSprint(sprint.id)}
-                    >
-                      <Archive className="h-3 w-3 mr-2" />
-                      {archived ? "Restaurar sprint" : "Arquivar sprint"}
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem onClick={() => openEditDialog(sprint)}>
+                    <Edit className="h-3.5 w-3.5 mr-2" />
+                    <span>Editar</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => archived ? unarchiveSprint(sprint.id) : archiveSprint(sprint.id)}>
+                    <Archive className="h-3.5 w-3.5 mr-2" />
+                    <span>{archived ? "Restaurar" : "Arquivar"}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => deleteSprint(sprint.id)}
+                    className="text-red-500 focus:text-red-500"
+                  >
+                    <Trash2 className="h-3.5 w-3.5 mr-2" />
+                    <span>Excluir</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         ))}
@@ -145,7 +207,7 @@ export const SprintSidebar: React.FC = () => {
                     {/* Active Sprints */}
                     {renderSprints(folder.id)}
                     
-                    {/* Archived Sprints - Showing directly without the button */}
+                    {/* Archived Sprints - Showing directly */}
                     {renderSprints(folder.id, true)}
                   </CollapsibleContent>
                 </Collapsible>
@@ -174,6 +236,27 @@ export const SprintSidebar: React.FC = () => {
           </DialogHeader>
           
           <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <label htmlFor="month-select" className="text-sm font-medium">
+                Selecione o mês
+              </label>
+              <Select 
+                value={selectedMonth.toString()}
+                onValueChange={(val) => setSelectedMonth(parseInt(val))}
+              >
+                <SelectTrigger id="month-select">
+                  <SelectValue placeholder="Selecione o mês" />
+                </SelectTrigger>
+                <SelectContent>
+                  {months.map(month => (
+                    <SelectItem key={month.value} value={month.value}>
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
             <div className="space-y-2">
               <label htmlFor="week-select" className="text-sm font-medium">
                 Selecione a semana
@@ -212,6 +295,37 @@ export const SprintSidebar: React.FC = () => {
             </Button>
             <Button onClick={handleCreateNewSprint}>
               Criar Sprint
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Edit Sprint Dialog */}
+      <Dialog open={isEditSprintDialogOpen} onOpenChange={setIsEditSprintDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Editar Sprint</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <label htmlFor="sprint-name" className="text-sm font-medium">
+                Nome da Sprint
+              </label>
+              <Input
+                id="sprint-name"
+                value={editSprintName}
+                onChange={(e) => setEditSprintName(e.target.value)}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditSprintDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleEditSprint}>
+              Salvar
             </Button>
           </DialogFooter>
         </DialogContent>

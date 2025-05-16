@@ -23,11 +23,13 @@ export interface TeamContextProps {
   editUser: (id: string, name: string, email: string, role: UserRole) => void;
   sprints: Sprint[];
   sprintFolders: SprintFolder[];
-  addSprint: (startDate: Date) => void;
+  addSprint: (startDate: Date, month?: number, year?: number) => void;
   toggleSprintFolder: (folderId: string) => void;
   archiveSprint: (sprintId: number) => void;
   unarchiveSprint: (sprintId: number) => void;
   moveSprint: (sprintId: number, folderId: string) => void;
+  deleteSprint: (sprintId: number) => void;
+  editSprint: (sprintId: number, name: string, startDate?: string, endDate?: string) => void;
 }
 
 export interface Team {
