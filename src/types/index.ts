@@ -1,4 +1,3 @@
-
 export interface Team {
   id: string;
   name: string;
@@ -36,11 +35,14 @@ export const FullDays: DayFull[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Se
 export const ShortDays: Day[] = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
 
 export interface User {
-  id: string;
+  id: string | number;
   name: string;
   email: string;
   role: UserRole;
+  department?: string;
+  image?: string;
   avatar?: string;
+  initials: string;
 }
 
 export type UserRole = 'Administrador' | 'Leitor';

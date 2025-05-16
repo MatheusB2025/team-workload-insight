@@ -145,22 +145,8 @@ export const SprintSidebar: React.FC = () => {
                     {/* Active Sprints */}
                     {renderSprints(folder.id)}
                     
-                    {/* Archived Sprints */}
-                    <Collapsible>
-                      <CollapsibleTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-xs py-0 h-6 w-full justify-start mt-1 mb-1 text-gray-500"
-                        >
-                          <Archive className="h-3 w-3 mr-1" />
-                          Sprints Arquivadas
-                        </Button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        {renderSprints(folder.id, true)}
-                      </CollapsibleContent>
-                    </Collapsible>
+                    {/* Archived Sprints - Showing directly without the button */}
+                    {renderSprints(folder.id, true)}
                   </CollapsibleContent>
                 </Collapsible>
               </div>
