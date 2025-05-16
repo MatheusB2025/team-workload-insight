@@ -1,5 +1,4 @@
-
-import { Team, TeamMember, Task } from "./types";
+import { Team, TeamMember, Task } from "@/types";
 import { Day } from "@/types";
 import { toast } from "sonner";
 import { calculateWorkload } from "./workloadUtils";
@@ -206,4 +205,32 @@ export const toggleTaskDay = (
       return member;
     }),
   });
+};
+
+export const editMember = (
+  currentTeam: Team,
+  setCurrentTeam: React.Dispatch<React.SetStateAction<Team>>,
+  id: string,
+  name: string,
+  image?: string
+) => {
+  // Generate new initials if name has changed
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .substring(0, 2);
+
+  setCurrentTeam({
+    ...currentTeam,
+    members: currentTeam.members.map((member) => {
+      if (member.id === id) {
+        return { ...member, name, initials, image };
+      }
+      return member;
+    }),
+  });
+
+  toast.success(`Colaborador ${name} atualizado com sucesso!`);
 };

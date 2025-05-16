@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { TeamMember, Day } from "@/types";
 import { useTeam } from "@/context/TeamContext";
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ArrowRight, Edit, Trash2, Plus } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EditMemberDialog } from "./EditMemberDialog";
 
 interface TeamMemberCardProps {
   member: TeamMember;
@@ -31,6 +31,7 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
   const [targetMember, setTargetMember] = useState("");
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isEditingMember, setIsEditingMember] = useState(false);
 
   const dayColors = {
     Seg: "bg-purple-500 text-white",
@@ -94,6 +95,14 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
           <div className="h-8 w-8 rounded-full flex items-center justify-center bg-gray-100">
             <span className="text-xs font-medium">{member.workload}%</span>
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+            onClick={() => setIsEditingMember(true)}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
           <Button 
             variant="ghost" 
             size="icon"
@@ -245,6 +254,13 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit Member Dialog */}
+      <EditMemberDialog
+        open={isEditingMember}
+        onOpenChange={setIsEditingMember}
+        member={member}
+      />
     </div>
   );
 };

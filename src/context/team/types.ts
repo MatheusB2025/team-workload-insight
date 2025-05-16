@@ -8,6 +8,7 @@ export interface TeamContextProps {
   setCurrentWeek: (week: string) => void;
   addMember: (name: string, image?: string) => void;
   removeMember: (id: string) => void;
+  editMember: (id: string, name: string, image?: string) => void;
   addTask: (memberId: string, taskName: string) => void;
   removeTask: (memberId: string, taskId: string) => void;
   editTask: (memberId: string, taskId: string, newTaskName: string) => void;

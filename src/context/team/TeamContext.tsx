@@ -17,7 +17,8 @@ import {
   removeTask, 
   editTask, 
   transferTask, 
-  toggleTaskDay 
+  toggleTaskDay,
+  editMember
 } from "./memberUtils";
 import { 
   addUser, 
@@ -56,6 +57,7 @@ export const TeamProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setCurrentWeek,
         addMember: (name, image) => addMember(currentTeam, setCurrentTeam, name, image),
         removeMember: (id) => removeMember(currentTeam, setCurrentTeam, id),
+        editMember: (id, name, image) => editMember(currentTeam, setCurrentTeam, id, name, image),
         addTask: (memberId, taskName) => addTask(currentTeam, setCurrentTeam, memberId, taskName),
         removeTask: (memberId, taskId) => removeTask(currentTeam, setCurrentTeam, memberId, taskId),
         editTask: (memberId, taskId, newTaskName) => editTask(currentTeam, setCurrentTeam, memberId, taskId, newTaskName),

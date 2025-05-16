@@ -36,7 +36,7 @@ export const FullDays: DayFull[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Se
 export const ShortDays: Day[] = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
 
 export interface User {
-  id: string | number;
+  id: string;
   name: string;
   email: string;
   role: UserRole;

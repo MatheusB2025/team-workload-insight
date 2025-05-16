@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { TeamLayout } from "@/components/Layouts";
 import { Button } from "@/components/ui/button";
@@ -42,7 +41,7 @@ const UsersPage = () => {
   
   const handleEditUser = () => {
     if (selectedUser && name.trim() && email.trim()) {
-      editUser(selectedUser.id, name, email, role);
+      editUser(String(selectedUser.id), name, email, role);
       resetForm();
       setIsEditUserOpen(false);
     } else {
@@ -117,7 +116,7 @@ const UsersPage = () => {
                           variant="ghost"
                           size="icon"
                           className="text-destructive"
-                          onClick={() => removeUser(user.id)}
+                          onClick={() => removeUser(String(user.id))}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
