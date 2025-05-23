@@ -1,5 +1,5 @@
 
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
