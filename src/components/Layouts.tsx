@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -29,8 +28,8 @@ export const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                   <Avatar className="h-8 w-8">
                     {user && (
                       <>
-                        <AvatarImage src={user.image || user.photoURL} alt={user.name} />
-                        <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={user.photoURL || ""} alt={user.name || ""} />
+                        <AvatarFallback>{user?.name?.charAt(0) || ""}</AvatarFallback>
                       </>
                     )}
                   </Avatar>
