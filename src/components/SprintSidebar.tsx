@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, Plus, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTeam } from "@/context/TeamContext";
@@ -17,6 +17,13 @@ import { NewSprintDialog } from "./sprint/NewSprintDialog";
 import { EditSprintDialog } from "./sprint/EditSprintDialog";
 import { printSprint } from "@/utils/pdfExport";
 
+// Declare global interface for window to store team data
+declare global {
+  interface Window {
+    __TEAM_DATA__?: () => any;
+  }
+}
+
 export const SprintSidebar: React.FC = () => {
   const { 
     sprints, 
@@ -26,7 +33,8 @@ export const SprintSidebar: React.FC = () => {
     unarchiveSprint, 
     addSprint,
     deleteSprint,
-    editSprint
+    editSprint,
+    currentTeam
   } = useTeam();
   
   // New sprint state
@@ -37,6 +45,17 @@ export const SprintSidebar: React.FC = () => {
   const [editingSprint, setEditingSprint] = useState<Sprint | null>(null);
   
   const isMobile = useIsMobile();
+  
+  // Make team data available globally for the print function
+  useEffect(() => {
+    window.__TEAM_DATA__ = () => ({
+      members: currentTeam.members
+    });
+    
+    return () => {
+      delete window.__TEAM_DATA__;
+    };
+  }, [currentTeam]);
   
   const handleCreateSprint = (startDate: Date, month: number, year: number) => {
     addSprint(startDate, month, year);
