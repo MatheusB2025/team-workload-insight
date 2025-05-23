@@ -5,13 +5,13 @@ import { WorkloadStatus } from "@/types";
 export const calculateWorkload = (tasks: Task[]): number => {
   if (tasks.length === 0) return 0;
   
-  // Count total task-days
-  const totalTaskDays = tasks.reduce((sum, task) => sum + task.days.length, 0);
+  // Simply use the number of tasks rather than task days
+  const numberOfTasks = tasks.length;
   
-  // Calculate workload percentage based on a theoretical max
-  // Assuming 5 tasks with all 5 days would be 100%
-  const maxPossibleTaskDays = 25; // 5 tasks × 5 days
-  return Math.round((totalTaskDays / maxPossibleTaskDays) * 100);
+  // Calculate workload percentage based on number of tasks
+  // Assuming 5 tasks would be 100% workload
+  const maxPossibleTasks = 5;
+  return Math.round((numberOfTasks / maxPossibleTasks) * 100);
 };
 
 export const getWorkloadStatus = (percentage: number): WorkloadStatus => {

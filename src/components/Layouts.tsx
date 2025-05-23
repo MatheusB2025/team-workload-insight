@@ -29,7 +29,7 @@ export const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                   <Avatar className="h-8 w-8">
                     {user && (
                       <>
-                        <AvatarImage src={user.photoURL} alt={user.name} />
+                        <AvatarImage src={user.image} alt={user.name} />
                         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                       </>
                     )}
