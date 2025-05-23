@@ -1,11 +1,11 @@
 
 import React from "react";
-import { ListPlus, Edit, Archive, Trash2, MoreVertical, FileText } from "lucide-react";
+import { ListPlus, Edit, Archive, Trash2, MoreVertical, FileText, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sprint } from "@/context/team/types";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { exportSprintToPDF } from "@/utils/pdfExport";
+import { exportSprintToPDF, printSprint } from "@/utils/pdfExport";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,6 +68,10 @@ export const SprintItem: React.FC<SprintItemProps> = ({
               <FileText className="h-3.5 w-3.5 mr-2" />
               <span>Exportar PDF</span>
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => printSprint(sprint)}>
+              <Printer className="h-3.5 w-3.5 mr-2" />
+              <span>Imprimir</span>
+            </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => onDelete(sprint.id)}
               className="text-red-500 focus:text-red-500"
@@ -81,3 +85,4 @@ export const SprintItem: React.FC<SprintItemProps> = ({
     </div>
   );
 };
+

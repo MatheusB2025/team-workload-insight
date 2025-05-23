@@ -48,3 +48,43 @@ export const exportSprintToPDF = async (sprint: Sprint) => {
   // Salvar o PDF
   pdf.save(`sprint-${sprint.name.replace(/\s+/g, '-').toLowerCase()}.pdf`);
 };
+
+// Nova função para imprimir a sprint
+export const printSprint = (sprint: Sprint) => {
+  // Criar um elemento temporário para a impressão
+  const printWindow = window.open('', '_blank');
+  
+  if (!printWindow) {
+    alert('Por favor, permita popups para imprimir a sprint');
+    return;
+  }
+  
+  // Adicionar conteúdo ao popup
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Sprint: ${sprint.name}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { font-size: 18px; margin-bottom: 10px; }
+          p { font-size: 14px; margin: 5px 0; }
+          .date { color: #666; }
+          .footer { margin-top: 30px; font-size: 12px; color: #999; }
+        </style>
+      </head>
+      <body>
+        <h1>Sprint: ${sprint.name}</h1>
+        <p>Período: ${formatSprintDate(sprint.startDate)} - ${formatSprintDate(sprint.endDate)}</p>
+        <p>Status: ${sprint.archived ? 'Arquivada' : 'Ativa'}</p>
+        <p class="footer">Documento impresso em: ${format(new Date(), "dd/MM/yyyy HH:mm", { locale: ptBR })}</p>
+      </body>
+    </html>
+  `);
+  
+  // Imprimir e fechar
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 300);
+};
+

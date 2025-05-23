@@ -1,11 +1,11 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, FileText } from "lucide-react";
+import { RefreshCw, FileText, Printer } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Sprint } from "@/context/team/types";
-import { exportSprintToPDF } from "@/utils/pdfExport";
+import { exportSprintToPDF, printSprint } from "@/utils/pdfExport";
 
 interface ArchivedSprintItemProps {
   sprint: Sprint;
@@ -29,6 +29,14 @@ export const ArchivedSprintItem: React.FC<ArchivedSprintItemProps> = ({ sprint, 
         <Button 
           variant="ghost" 
           size="sm"
+          onClick={() => printSprint(sprint)}
+        >
+          <Printer className="h-3.5 w-3.5 mr-1" />
+          Imprimir
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm"
           onClick={() => exportSprintToPDF(sprint)}
         >
           <FileText className="h-3.5 w-3.5 mr-1" />
@@ -46,3 +54,4 @@ export const ArchivedSprintItem: React.FC<ArchivedSprintItemProps> = ({ sprint, 
     </div>
   );
 };
+
