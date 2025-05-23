@@ -4,9 +4,8 @@ import html2canvas from 'html2canvas';
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Sprint } from "@/context/team/types";
-import { useTeam } from "@/context/TeamContext";
 
-// Utility functions
+// ===== Date Formatting Utilities =====
 const formatSprintDate = (dateString: string) => {
   return format(parseISO(dateString), "dd/MM", { locale: ptBR });
 };
@@ -19,7 +18,7 @@ const getSprintFileName = (sprintName: string) => {
   return `sprint-${sprintName.replace(/\s+/g, '-').toLowerCase()}.pdf`;
 };
 
-// PDF Header Functions
+// ===== PDF Header Functions =====
 const addPdfTitle = (pdf: jsPDF, title: string, yPosition: number) => {
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(18);
@@ -58,7 +57,7 @@ const addPdfGenerationDate = (pdf: jsPDF, yPosition: number) => {
   return yPosition + 10;
 };
 
-// Main PDF Export Function
+// ===== Main PDF Export Function =====
 export const exportSprintToPDF = async (sprint: Sprint) => {
   // Create new jsPDF instance
   const pdf = new jsPDF('p', 'mm', 'a4');
@@ -74,13 +73,16 @@ export const exportSprintToPDF = async (sprint: Sprint) => {
   pdf.save(getSprintFileName(sprint.name));
 };
 
-// HTML Generation Functions for Print
+// ===== HTML Generation Functions for Print =====
+
+// Member HTML Components
 const generateMemberAvatarHtml = (member: any) => {
   return member.image 
     ? `<img src="${member.image}" alt="${member.name}" />`
     : member.initials;
 };
 
+// Task HTML Components
 const generateTaskDaysHtml = (task: any) => {
   if (!task.days || task.days.length === 0) {
     return '';
@@ -133,6 +135,7 @@ const generateMembersListHtml = (members: any[]) => {
   return members.map(member => generateMemberCardHtml(member)).join('');
 };
 
+// CSS Styling for Print
 const generatePrintStyles = () => {
   return `
     <style>
@@ -202,6 +205,7 @@ const generatePrintStyles = () => {
   `;
 };
 
+// Complete HTML Document
 const generateHtmlDocument = (sprint: Sprint, members: any[]) => {
   return `
     <html>
@@ -224,7 +228,7 @@ const generateHtmlDocument = (sprint: Sprint, members: any[]) => {
   `;
 };
 
-// Get team data from global variable for printing
+// Global Team Data Handling
 const getTeamData = () => {
   return window.__TEAM_DATA__ ? window.__TEAM_DATA__() : { members: [] };
 };
