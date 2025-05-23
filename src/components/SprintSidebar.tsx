@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Calendar, Plus } from "lucide-react";
+import { Calendar, Plus, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTeam } from "@/context/TeamContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -15,6 +15,7 @@ import { Sprint } from "@/context/team/types";
 import { SprintFolderComponent } from "./sprint/SprintFolder";
 import { NewSprintDialog } from "./sprint/NewSprintDialog";
 import { EditSprintDialog } from "./sprint/EditSprintDialog";
+import { printSprint } from "@/utils/pdfExport";
 
 export const SprintSidebar: React.FC = () => {
   const { 
@@ -50,6 +51,18 @@ export const SprintSidebar: React.FC = () => {
     setIsEditSprintDialogOpen(true);
   };
   
+  // Get the currently active sprint (first non-archived sprint)
+  const activeSprint = sprints.find(sprint => !sprint.archived);
+  
+  // Handle print sprint
+  const handlePrintSprint = () => {
+    if (activeSprint) {
+      printSprint(activeSprint);
+    } else {
+      alert("Não há sprints disponíveis para imprimir.");
+    }
+  };
+  
   const sidebarContent = (
     <div className="h-full flex flex-col">
       <div className="p-4 border-b">
@@ -77,7 +90,7 @@ export const SprintSidebar: React.FC = () => {
         </div>
       </div>
       
-      <div className="p-2 border-t">
+      <div className="p-2 border-t space-y-2">
         <Button 
           className="w-full flex items-center justify-center text-xs" 
           variant="outline"
@@ -85,6 +98,15 @@ export const SprintSidebar: React.FC = () => {
         >
           <Plus className="h-3 w-3 mr-2" />
           Nova Sprint
+        </Button>
+        
+        <Button 
+          className="w-full flex items-center justify-center text-xs" 
+          variant="outline"
+          onClick={handlePrintSprint}
+        >
+          <Printer className="h-3 w-3 mr-2" />
+          Imprimir Sprint Atual
         </Button>
       </div>
       

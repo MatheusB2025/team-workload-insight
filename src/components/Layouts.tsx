@@ -26,7 +26,7 @@ export const MainLayout: React.FC<LayoutProps> = ({ children }) => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.avatar} alt={user?.name} />
+                    <AvatarImage src={user?.image} alt={user?.name} />
                     <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <span className="text-gray-600 font-normal">
