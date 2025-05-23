@@ -84,8 +84,41 @@ export const printSprint = (sprint: Sprint) => {
             margin-bottom: 15px; 
             border-radius: 4px;
           }
-          .member-name { font-weight: bold; font-size: 16px; margin-bottom: 10px; }
-          .task-list { list-style-type: none; padding-left: 0; }
+          .member-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+          .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+            border: 1px solid #ddd;
+            overflow: hidden;
+          }
+          .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+          .member-name { font-weight: bold; font-size: 16px; }
+          .member-info { 
+            display: flex; 
+            flex-direction: column;
+            flex: 1;
+          }
+          .workload {
+            font-size: 12px;
+            color: #666;
+          }
+          .task-list { list-style-type: none; padding-left: 0; margin-top: 10px; }
           .task-item { 
             padding: 8px 5px;
             border-bottom: 1px solid #eee; 
@@ -117,7 +150,18 @@ export const printSprint = (sprint: Sprint) => {
     members.forEach(member => {
       printWindow.document.write(`
         <div class="member-card">
-          <div class="member-name">${member.name}</div>
+          <div class="member-header">
+            <div class="member-avatar">
+              ${member.image 
+                ? `<img src="${member.image}" alt="${member.name}" />`
+                : member.initials
+              }
+            </div>
+            <div class="member-info">
+              <div class="member-name">${member.name}</div>
+              <div class="workload">Carga: ${member.workload}%</div>
+            </div>
+          </div>
       `);
       
       if (member.tasks && member.tasks.length > 0) {
@@ -165,3 +209,4 @@ export const printSprint = (sprint: Sprint) => {
     printWindow.close();
   }, 300);
 };
+
