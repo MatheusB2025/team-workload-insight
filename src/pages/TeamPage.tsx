@@ -42,8 +42,6 @@ const TeamPage = () => {
           <TeamLayout>
             <div className="p-6">
               <TeamHeader 
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
                 setIsNewMemberDialogOpen={setIsNewMemberDialogOpen}
               />
 
