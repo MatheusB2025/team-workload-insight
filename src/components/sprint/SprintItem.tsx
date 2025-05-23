@@ -1,10 +1,11 @@
 
 import React from "react";
-import { ListPlus, Edit, Archive, Trash2, MoreVertical } from "lucide-react";
+import { ListPlus, Edit, Archive, Trash2, MoreVertical, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sprint } from "@/context/team/types";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { exportSprintToPDF } from "@/utils/pdfExport";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,6 +63,10 @@ export const SprintItem: React.FC<SprintItemProps> = ({
             <DropdownMenuItem onClick={() => archived ? onRestore(sprint.id) : onArchive(sprint.id)}>
               <Archive className="h-3.5 w-3.5 mr-2" />
               <span>{archived ? "Restaurar" : "Arquivar"}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => exportSprintToPDF(sprint)}>
+              <FileText className="h-3.5 w-3.5 mr-2" />
+              <span>Exportar PDF</span>
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => onDelete(sprint.id)}

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Sprint } from "@/context/team/types";
+import { format, parseISO } from "date-fns";
 
 interface EditSprintDialogProps {
   open: boolean;
@@ -19,16 +20,20 @@ export const EditSprintDialog: React.FC<EditSprintDialogProps> = ({
   onSave
 }) => {
   const [sprintName, setSprintName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   
   useEffect(() => {
     if (sprint) {
       setSprintName(sprint.name);
+      setStartDate(format(parseISO(sprint.startDate), "yyyy-MM-dd"));
+      setEndDate(format(parseISO(sprint.endDate), "yyyy-MM-dd"));
     }
   }, [sprint]);
 
   const handleSave = () => {
     if (sprint) {
-      onSave(sprint.id, sprintName);
+      onSave(sprint.id, sprintName, startDate, endDate);
       onOpenChange(false);
     }
   };
@@ -49,6 +54,30 @@ export const EditSprintDialog: React.FC<EditSprintDialogProps> = ({
               id="sprint-name"
               value={sprintName}
               onChange={(e) => setSprintName(e.target.value)}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="start-date" className="text-sm font-medium">
+              Data de Início
+            </label>
+            <Input
+              id="start-date"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="end-date" className="text-sm font-medium">
+              Data de Término
+            </label>
+            <Input
+              id="end-date"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
         </div>

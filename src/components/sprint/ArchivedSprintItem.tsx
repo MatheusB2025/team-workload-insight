@@ -1,10 +1,11 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, FileText } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Sprint } from "@/context/team/types";
+import { exportSprintToPDF } from "@/utils/pdfExport";
 
 interface ArchivedSprintItemProps {
   sprint: Sprint;
@@ -24,14 +25,24 @@ export const ArchivedSprintItem: React.FC<ArchivedSprintItemProps> = ({ sprint, 
           ({formatSprintDate(sprint.startDate)} - {formatSprintDate(sprint.endDate)})
         </span>
       </div>
-      <Button 
-        variant="ghost" 
-        size="sm"
-        onClick={() => onRestore(sprint.id)}
-      >
-        <RefreshCw className="h-3.5 w-3.5 mr-1" />
-        Restaurar
-      </Button>
+      <div className="flex space-x-2">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => exportSprintToPDF(sprint)}
+        >
+          <FileText className="h-3.5 w-3.5 mr-1" />
+          PDF
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => onRestore(sprint.id)}
+        >
+          <RefreshCw className="h-3.5 w-3.5 mr-1" />
+          Restaurar
+        </Button>
+      </div>
     </div>
   );
 };
