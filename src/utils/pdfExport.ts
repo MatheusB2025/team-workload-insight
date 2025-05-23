@@ -139,29 +139,46 @@ const generateMembersListHtml = (members: any[]) => {
 const generatePrintStyles = () => {
   return `
     <style>
-      body { font-family: Arial, sans-serif; padding: 20px; }
-      h1 { font-size: 24px; margin-bottom: 10px; }
-      h2 { font-size: 18px; margin-top: 20px; margin-bottom: 10px; }
-      .sprint-details { margin-bottom: 25px; }
+      @page { size: auto; margin: 10mm; }
+      body { 
+        font-family: Arial, sans-serif; 
+        padding: 20px; 
+        margin: 0; 
+        page-break-inside: avoid; 
+        page-break-after: avoid;
+        width: 100%;
+      }
+      h1 { font-size: 22px; margin-bottom: 8px; }
+      h2 { font-size: 16px; margin-top: 16px; margin-bottom: 8px; }
+      .sprint-details { margin-bottom: 20px; }
       p { font-size: 14px; margin: 5px 0; }
       .date { color: #666; }
-      .footer { margin-top: 30px; font-size: 12px; color: #999; }
+      .footer { margin-top: 25px; font-size: 12px; color: #999; }
+      .member-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
       .member-card { 
         border: 1px solid #ddd; 
-        padding: 15px; 
-        margin-bottom: 15px; 
+        padding: 12px; 
+        margin-bottom: 12px; 
         border-radius: 4px;
+        page-break-inside: avoid;
+        width: 45%;
+        display: inline-block;
+        vertical-align: top;
       }
       .member-header {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
       }
       .member-avatar {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        margin-right: 10px;
+        margin-right: 8px;
         background-color: #f0f0f0;
         display: flex;
         align-items: center;
@@ -176,30 +193,47 @@ const generatePrintStyles = () => {
         height: 100%;
         object-fit: cover;
       }
-      .member-name { font-weight: bold; font-size: 16px; }
+      .member-name { font-weight: bold; font-size: 15px; }
       .member-info { 
         display: flex; 
         flex-direction: column;
         flex: 1;
       }
       .workload {
-        font-size: 12px;
+        font-size: 11px;
         color: #666;
       }
-      .task-list { list-style-type: none; padding-left: 0; margin-top: 10px; }
+      .task-list { 
+        list-style-type: none; 
+        padding-left: 0; 
+        margin-top: 8px; 
+        margin-bottom: 2px;
+      }
       .task-item { 
-        padding: 8px 5px;
+        padding: 4px 2px;
         border-bottom: 1px solid #eee; 
         display: flex;
         justify-content: space-between;
+        font-size: 13px;
       }
       .task-name { flex: 1; }
-      .task-days { display: flex; gap: 5px; }
+      .task-days { display: flex; gap: 4px; }
       .task-day { 
-        padding: 2px 5px; 
+        padding: 1px 4px; 
         border-radius: 3px; 
         background-color: #e9ecef; 
-        font-size: 12px; 
+        font-size: 11px; 
+      }
+      @media print {
+        .member-card {
+          break-inside: avoid;
+        }
+        html, body {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
       }
     </style>
   `;
@@ -221,7 +255,9 @@ const generateHtmlDocument = (sprint: Sprint, members: any[]) => {
         </div>
 
         <h2>Equipe e Tarefas</h2>
-        ${generateMembersListHtml(members)}
+        <div class="member-container">
+          ${generateMembersListHtml(members)}
+        </div>
         <p class="footer">Documento impresso em: ${getCurrentFormattedDate()}</p>
       </body>
     </html>
@@ -251,9 +287,14 @@ export const printSprint = (sprint: Sprint) => {
   const htmlContent = generateHtmlDocument(sprint, members);
   printWindow.document.write(htmlContent);
   
-  // Print and close after timeout
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 300);
+  // Ensure content is loaded before printing
+  printWindow.document.close();
+  
+  // Wait for content to load before printing
+  printWindow.onload = () => {
+    setTimeout(() => {
+      printWindow.print();
+      // Don't close the window immediately to allow the print dialog to appear
+    }, 500);
+  };
 };

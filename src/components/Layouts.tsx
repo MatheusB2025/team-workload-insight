@@ -2,12 +2,19 @@
 import React, { ReactNode } from "react";
 import { useTeam } from "@/context/TeamContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
 
 interface LayoutProps {
   children: ReactNode;
   containerClassName?: string;
 }
+
+export const MainLayout = ({ children }: LayoutProps) => {
+  return (
+    <div className="h-full">
+      {children}
+    </div>
+  );
+};
 
 export const TeamLayout = ({ children, containerClassName = "" }: LayoutProps) => {
   const { currentTeam } = useTeam();
@@ -32,6 +39,16 @@ export const MemberLayout = ({ children }: LayoutProps) => {
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
     );
+  };
+
+  // Helper function to get initials from a name
+  const getInitials = (name: string): string => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   };
 
   return (
