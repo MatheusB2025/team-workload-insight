@@ -1,4 +1,5 @@
 
+
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { format, parseISO } from "date-fns";
@@ -179,7 +180,6 @@ const generatePrintStyles = () => {
       .sprint-details { margin-bottom: 20px; }
       p { font-size: 12px; margin: 3px 0; }
       .date { color: #666; }
-      .footer { margin-top: 20px; font-size: 10px; color: #999; }
       .member-card { 
         border: 1px solid #ddd; 
         padding: 8px; 
@@ -287,3 +287,4 @@ export const printSprint = (sprint: Sprint) => {
     printWindow.close();
   }, 300);
 };
+
