@@ -252,9 +252,6 @@ const generateHtmlDocument = (sprint: Sprint, members: any[]) => {
       </head>
       <body>
         <h1>Sprint: ${sprint.name}</h1>
-        <div class="sprint-details">
-          <p>Período: ${formatSprintDate(sprint.startDate)} - ${formatSprintDate(sprint.endDate)}</p>
-        </div>
 
         <h2>Equipe e Tarefas</h2>
         ${generateMembersListHtml(members)}
