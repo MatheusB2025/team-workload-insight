@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { format, parseISO } from "date-fns";
@@ -251,8 +250,6 @@ const generateHtmlDocument = (sprint: Sprint, members: any[]) => {
         ${generatePrintStyles()}
       </head>
       <body>
-        <h1>Sprint: ${sprint.name}</h1>
-
         <h2>Equipe e Tarefas</h2>
         ${generateMembersListHtml(members)}
         <p class="footer">Documento impresso em: ${getCurrentFormattedDate()}</p>
