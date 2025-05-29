@@ -6,16 +6,14 @@ import { useTeam } from "@/context/TeamContext";
 import { SprintSidebar } from "@/components/SprintSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { TeamHeader } from "@/components/team/TeamHeader";
-import { SprintSelector } from "@/components/team/SprintSelector";
 import { ArchivedSprintsList } from "@/components/team/ArchivedSprintsList";
 import { TeamMembersList } from "@/components/team/TeamMembersList";
 
 const TeamPage = () => {
-  const { currentTeam, sprints, archiveSprint, unarchiveSprint } = useTeam();
+  const { currentTeam, sprints, unarchiveSprint } = useTeam();
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewMemberDialogOpen, setIsNewMemberDialogOpen] = useState(false);
   const [isTeamListCollapsed, setIsTeamListCollapsed] = useState(false);
-  const [selectedSprintId, setSelectedSprintId] = useState<number | null>(null);
   const [showArchivedSprints, setShowArchivedSprints] = useState(false);
   
   const filteredMembers = searchQuery.trim() 
@@ -24,12 +22,6 @@ const TeamPage = () => {
       )
     : currentTeam.members;
 
-  // Get the first week sprint of the current month
-  const firstWeekSprint = sprints.find(sprint => sprint.name === "Semana 1" && !sprint.archived);
-  
-  // Get available sprints for dropdown
-  const availableSprints = sprints.filter(sprint => !sprint.archived);
-  
   // Get archived sprints
   const archivedSprints = sprints.filter(sprint => sprint.archived);
 
@@ -43,16 +35,6 @@ const TeamPage = () => {
             <div className="p-6">
               <TeamHeader 
                 setIsNewMemberDialogOpen={setIsNewMemberDialogOpen}
-              />
-
-              <SprintSelector 
-                availableSprints={availableSprints}
-                selectedSprintId={selectedSprintId}
-                setSelectedSprintId={setSelectedSprintId}
-                showArchivedSprints={showArchivedSprints}
-                setShowArchivedSprints={setShowArchivedSprints}
-                archiveSprint={archiveSprint}
-                firstWeekSprint={firstWeekSprint}
               />
 
               <ArchivedSprintsList 
